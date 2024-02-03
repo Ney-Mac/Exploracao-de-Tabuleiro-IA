@@ -5,8 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 class Ambiente:
-    def __init__(self, tamanho, proporcao):
-        self.tamanho = tamanho
+    def __init__(self, proporcao):
+        self.tamanho = 10
         self.proporcao = proporcao
         self.matriz = self.inicializar()
         #self.estado_global
@@ -59,5 +59,13 @@ def main():
 
     ambiente = Ambiente(10, proporcao)
     #ambiente.imprimir([])
+
+    # Carrega dados CSV
+    data = pd.read_csv('../dataset/dataset.csv', delimiter=';')
+
+    global_encoder = LabelEncoder()
+
+
+
 
 main()
