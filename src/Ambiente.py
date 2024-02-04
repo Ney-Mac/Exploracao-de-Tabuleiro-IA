@@ -25,21 +25,17 @@ class Ambiente:
         return matriz
 
     def imprimir(self, agentes):
-        matriz_copia = self.matriz_compartilhada.copy()
         for agente in agentes:
-            matriz_copia[agente.posicao[0]][agente.posicao[1]] = agente.nome
-            print(f'Agente {agente.nome} pos: {agente.posicao}')
-
-        for linha in matriz_copia:
-            print(" ".join(linha))
-        print()
+            valor_agente = self.matriz_compartilhada[agente.posicao[0]][agente.posicao[1]]
+            self.matriz_compartilhada[agente.posicao[0]][agente.posicao[1]] = agente.nome
 
         for linha in self.matriz_compartilhada:
             print(" ".join(linha))
-        print()
+
+        for agente in agentes:
+            self.matriz_compartilhada[agente.posicao[0]][agente.posicao[1]] = valor_agente
 
     def imprimir_matriz_base(self):
-        print('Total tesouros: ', self.total_tesouros)
         for linha in self.matriz_base:
             print(" ".join(linha))
         print()

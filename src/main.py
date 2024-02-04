@@ -8,24 +8,19 @@ from Ambiente import Ambiente
 from Agente import Agente
 
 def abordagem_A(ambiente, agentes):
-    for agente in agentes:
-        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
-
-    print('###### Matriz base ##########')
-    ambiente.imprimir_matriz_base()
-
-    print('######### Matriz explorada ############')
-    ambiente.imprimir(agentes)
-
-    i = 0
-    while ambiente.tesouros_achados <= ambiente.total_tesouros * 0.5:
-        for agente in agentes:
+    while ambiente.tesouros_achados <= ambiente.total_tesouros * 0.5 and len(agentes) > 0:
+        for index, agente in enumerate(agentes[:]):
             if agente.vivo:
                 agente.mover(ambiente)
+            else:
+                agentes.pop(index)
         ambiente.imprimir(agentes)
-        i += 1
-        print(i)
-        if i == 10: break
+
+    print(f'Total de tesouros iniciais: {ambiente.total_tesouros}')
+    print(f'Total de tesouros encontrados: {ambiente.tesouros_achados}')
+
+def abordagem_B(ambiente, agentes):
+
 
 def main():
     data = pd.read_csv('./dados_treino/dataset.csv', delimiter=',')
@@ -53,6 +48,15 @@ def main():
         agentes.append(agente)
     print()
 
+    for agente in agentes:
+        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
+
+    print('###### Matriz base ##########')
+    ambiente.imprimir_matriz_base()
+    print('######### Matriz explorada ############')
+    ambiente.imprimir(agentes)
+
     abordagem_A(ambiente, agentes)
+    abordagem_B(ambiente, agentes)
 
 main()
