@@ -7,9 +7,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
-from Ambiente import Ambiente
-from Agente import Agente
-from Interface import Interface
+from src.Ambiente import Ambiente
+from src.Agente import Agente
+from src.Interface import Interface
 
 time_to_sleep = 0.5
 

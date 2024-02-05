@@ -11,10 +11,16 @@ class Agente:
         self.posicao = self.set_posicao()
         self.treinar(dados_treino, rotulos_treino)
         self.qt_tesouros = 0
+        self.pos_tesouros_encontrados = []
+        self.posicoes_anteriores = []
 
     def add_tesouro(self, ambiente):
+        if self.posicao in self.pos_tesouros_encontrados:
+            return
+
         self.qt_tesouros += 1
         ambiente.tesouros_achados += 1
+        self.pos_tesouros_encontrados.append(self.posicao)
 
     def usar_tesouro(self):
         self.qt_tesouros -= 1
@@ -47,6 +53,10 @@ class Agente:
         return [esquerda, direita, cima, baixo]
 
     def mover(self, ambiente):
+        if len(self.posicoes_anteriores) == 2:
+            self.posicoes_anteriores.pop(0)
+        self.posicoes_anteriores.append(self.posicao)
+
         linha, coluna = self.posicao
         celulas_vizinhas = self.get_celulas_vizinhas(ambiente)
 
@@ -60,6 +70,20 @@ class Agente:
                 )
             )
         )
+
+        if len(self.posicoes_anteriores) == 2:
+            while nova_posicao == self.posicoes_anteriores[0]:
+                movimentos_possiveis = [valor for valor in celulas_vizinhas if valor != '-']
+                novo_movimento = random.choice(movimentos_possiveis)
+                nova_posicao = (
+                    (linha + 1, coluna) if novo_movimento == 'Baixo' else (
+                        (linha - 1, coluna) if novo_movimento == 'Cima' else (
+                            (linha, coluna + 1) if novo_movimento == 'Direita' else
+                            (linha, coluna - 1)
+                        )
+                    )
+                )
+
         self.posicao = nova_posicao
 
         print(f'\nAgente {self.nome} moveu-se para {movimento}')
