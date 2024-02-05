@@ -1,5 +1,6 @@
 import random
 
+
 class Agente:
     def __init__(self, nome, modelo, dados_treino, rotulos_treino, encoder):
         self.nome = nome
@@ -18,10 +19,11 @@ class Agente:
     def usar_tesouro(self):
         self.qt_tesouros -= 1
 
-    def set_posicao(self):
+    @staticmethod
+    def set_posicao():
         linha = random.randint(0, 9)
         coluna = random.randint(0, 9)
-        return (linha, coluna)
+        return linha, coluna
 
     def treinar(self, dados_treino, rotulos_treino):
         self.modelo.fit(dados_treino, rotulos_treino)
@@ -75,8 +77,10 @@ class Agente:
                 self.vivo = False
             else:
                 self.usar_tesouro()
-        elif celula_atual == 'T': self.add_tesouro(ambiente)
-        elif celula_atual == 'F': self.flag = True
+        elif celula_atual == 'T':
+            self.add_tesouro(ambiente)
+        elif celula_atual == 'F':
+            self.flag = True
 
         self.enviar_informacao(ambiente)
 

@@ -30,14 +30,15 @@ class Ambiente:
             self.matriz_compartilhada[agente.posicao[0]][agente.posicao[1]] = agente.nome
 
         for linha in self.matriz_compartilhada:
-            print(" ".join(linha))
+            print("    ".join(linha))
 
         for agente in agentes:
             self.matriz_compartilhada[agente.posicao[0]][agente.posicao[1]] = valor_agente
+        print()
 
     def imprimir_matriz_base(self):
         for linha in self.matriz_base:
-            print(" ".join(linha))
+            print("    ".join(linha))
         print()
 
     def partilhar_informacao(self, linha, coluna, info):

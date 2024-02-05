@@ -1,13 +1,16 @@
-import random
 import pandas as pd
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
+# from sklearn.metrics import accuracy_score
 
 from Ambiente import Ambiente
 from Agente import Agente
 
-def abordagem_A(ambiente, agentes):
+time_to_sleep = 1
+
+
+def abordagem_a(ambiente, agentes):
     for agente in agentes:
         ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
 
@@ -24,10 +27,11 @@ def abordagem_A(ambiente, agentes):
         print(f'Total de tesouros iniciais: {ambiente.total_tesouros}')
         print(f'Total de tesouros encontrados: {ambiente.tesouros_achados}')
     else:
-        print('*********FALHA*********')
+        print('*********FALHA - Abordagem A*********')
         print(f'Todos os agentes morreram antes de encontrar ao menos 50% dos tesouros.')
 
-def abordagem_B(ambiente, agentes):
+
+def abordagem_b(ambiente, agentes):
     for agente in agentes:
         ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
 
@@ -41,12 +45,13 @@ def abordagem_B(ambiente, agentes):
 
     if len(agentes) > 0:
         print('*********SUCESSO - Abordagem B********')
-        print(f'O ambiente foi totalmente explorado e constinuam {len(agentes)} vivos')
+        print(f'O ambiente foi totalmente explorado e continuam {len(agentes)} vivos')
     else:
-        print('*********FALHA*********')
+        print('*********FALHA - Abordagem B*********')
         print('Todos os agentes morreram antes de explorar o ambiente inteiro')
 
-def abordagem_C(ambiente, agentes):
+
+def abordagem_c(ambiente, agentes):
     ambiente.inserir_f()
 
     for agente in agentes:
@@ -68,7 +73,7 @@ def abordagem_C(ambiente, agentes):
         print('*********SUCESSO - Abordagem C********')
         print('A bandeira foi encontrada')
     else:
-        print('*********FALHA*********')
+        print('*********FALHA - Abordagem C*********')
         print('Todos os agentes morreram antes de encontrar a bandeira')
 
 
@@ -87,10 +92,10 @@ def main():
     # Separa os dados em treinamento e teste
     X = data[['Esquerda', 'Direita', 'Cima', 'Baixo']].values
     y = data['Acao'].values
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=8)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=93)
 
     # Criar agentes
-    num_agentes = 2
+    num_agentes = 5
     agentes = []
     for i in range(num_agentes):
         modelo_agente = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=2000)
@@ -103,8 +108,12 @@ def main():
     print('######### Matriz explorada ############')
     ambiente.imprimir(agentes)
 
-    #abordagem_A(ambiente, agentes)
-    #abordagem_B(ambiente, agentes)
-    abordagem_C(ambiente, agentes)
+    abordagem_a(ambiente, agentes)
+    # abordagem_b(ambiente, agentes)
+    # abordagem_c(ambiente, agentes)
+
+    # for agente in agentes:
+    #      print(f'Agente {agente.nome} accuracy: {accuracy_score(y_test, agente.testar(X_test))}')
+
 
 main()
