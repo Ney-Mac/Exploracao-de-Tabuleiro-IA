@@ -1,3 +1,4 @@
+import time
 import pandas as pd
 from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
@@ -8,20 +9,23 @@ from sklearn.metrics import accuracy_score
 
 from Ambiente import Ambiente
 from Agente import Agente
+from Interface import Interface
 
-time_to_sleep = 1
+time_to_sleep = 0.5
 
 
-def abordagem_a(ambiente, agentes):
+def abordagem_a(ambiente, agentes, atualizar_tab):
     for agente in agentes:
         ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
 
     while ambiente.tesouros_achados <= ambiente.total_tesouros * 0.5 and len(agentes) > 0:
-        for index, agente in enumerate(agentes[:]):
+        for agente in agentes[:]:
             if agente.vivo:
                 agente.mover(ambiente)
+                atualizar_tab()
+                time.sleep(time_to_sleep)
             else:
-                agentes.pop(index)
+                agentes.remove(agente)
         ambiente.imprimir(agentes)
 
     if len(agentes) > 0:
@@ -33,16 +37,18 @@ def abordagem_a(ambiente, agentes):
         print(f'Todos os agentes morreram antes de encontrar ao menos 50% dos tesouros.')
 
 
-def abordagem_b(ambiente, agentes):
+def abordagem_b(ambiente, agentes, atualizar_tab):
     for agente in agentes:
         ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
 
     while 'N' in [elemento for linha in ambiente.matriz_compartilhada for elemento in linha] and len(agentes) > 0:
-        for index, agente in enumerate(agentes[:]):
+        for agente in agentes[:]:
             if agente.vivo:
                 agente.mover(ambiente)
+                atualizar_tab()
+                time.sleep(time_to_sleep)
             else:
-                agentes.pop(index)
+                agentes.remove(agente)
         ambiente.imprimir(agentes)
 
     if len(agentes) > 0:
@@ -53,7 +59,7 @@ def abordagem_b(ambiente, agentes):
         print('Todos os agentes morreram antes de explorar o ambiente inteiro')
 
 
-def abordagem_c(ambiente, agentes):
+def abordagem_c(ambiente, agentes, atualizar_tab):
     ambiente.inserir_f()
 
     for agente in agentes:
@@ -61,11 +67,13 @@ def abordagem_c(ambiente, agentes):
 
     flag = False
     while not flag and len(agentes) > 0:
-        for index, agente in enumerate(agentes[:]):
+        for agente in agentes[:]:
             if agente.vivo:
                 agente.mover(ambiente)
             else:
-                agentes.pop(index)
+                agentes.remove(agente)
+                atualizar_tab()
+                time.sleep(time_to_sleep)
             if agente.flag:
                 flag = True
                 break
@@ -97,12 +105,12 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Criar agentes
-    num_agentes = 5
+    num_agentes = 2
     agentes = []
     for i in range(num_agentes):
         # modelo_agente = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=2000)
-        # modelo_agente = KNeighborsClassifier()
-        modelo_agente = DecisionTreeClassifier()
+        modelo_agente = KNeighborsClassifier()
+        # modelo_agente = DecisionTreeClassifier()
         agente = Agente(f'A{i + 1}', modelo_agente, X_train, y_train, global_encoder)
         agentes.append(agente)
     print()
@@ -112,8 +120,11 @@ def main():
     print('######### Matriz explorada ############')
     ambiente.imprimir(agentes)
 
+    interface = Interface(ambiente, agentes, abordagem_a, abordagem_b, abordagem_c)
+    interface.root.mainloop()
+
     # abordagem_a(ambiente, agentes)
-    abordagem_b(ambiente, agentes)
+    # abordagem_b(ambiente, agentes)
     # abordagem_c(ambiente, agentes)
 
     # for agente in agentes:
