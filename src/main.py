@@ -16,11 +16,29 @@ def abordagem_A(ambiente, agentes):
                 agentes.pop(index)
         ambiente.imprimir(agentes)
 
-    print(f'Total de tesouros iniciais: {ambiente.total_tesouros}')
-    print(f'Total de tesouros encontrados: {ambiente.tesouros_achados}')
+    if len(agentes) > 0:
+        print('*********SUCESSO - Abordagem A********')
+        print(f'Total de tesouros iniciais: {ambiente.total_tesouros}')
+        print(f'Total de tesouros encontrados: {ambiente.tesouros_achados}')
+    else:
+        print('*********FALHA*********')
+        print(f'Todos os agentes morreram antes de encontrar ao menos 50% dos tesouros.')
 
 def abordagem_B(ambiente, agentes):
+    while 'N' in [elemento for linha in ambiente.matriz_compartilhada for elemento in linha] and len(agentes) > 0:
+        for index, agente in enumerate(agentes[:]):
+            if agente.vivo:
+                agente.mover(ambiente)
+            else:
+                agentes.pop(index)
+        ambiente.imprimir(agentes)
 
+    if len(agentes) > 0:
+        print('*********SUCESSO - Abordagem B********')
+        print(f'O ambiente foi totalmente explorado e constinuam {len(agentes)} vivos')
+    else:
+        print('*********FALHA*********')
+        print('Todos os agentes morreram antes de explorar o ambiente inteiro')
 
 def main():
     data = pd.read_csv('./dados_treino/dataset.csv', delimiter=',')
@@ -56,7 +74,7 @@ def main():
     print('######### Matriz explorada ############')
     ambiente.imprimir(agentes)
 
-    abordagem_A(ambiente, agentes)
+    #abordagem_A(ambiente, agentes)
     abordagem_B(ambiente, agentes)
 
 main()
