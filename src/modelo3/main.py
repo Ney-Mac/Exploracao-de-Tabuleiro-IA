@@ -1,11 +1,8 @@
 import time
 import pandas as pd
-from sklearn.neural_network import MLPClassifier
-from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import accuracy_score
 
 from Ambiente import Ambiente
 from Agente import Agente
@@ -88,7 +85,7 @@ def abordagem_c(ambiente, agentes, atualizar_tab):
 
 
 def main():
-    data = pd.read_csv('./dados_treino/dataset.csv', delimiter=',')
+    data = pd.read_csv('../dados_treino/dataset.csv', delimiter=',')
     global_encoder = LabelEncoder()
 
     proporcao = {'B': 0.3, 'T': 0.2}
@@ -108,9 +105,7 @@ def main():
     num_agentes = 2
     agentes = []
     for i in range(num_agentes):
-        # modelo_agente = MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=2000)
-        modelo_agente = KNeighborsClassifier()
-        # modelo_agente = DecisionTreeClassifier()
+        modelo_agente = DecisionTreeClassifier()
         agente = Agente(f'A{i + 1}', modelo_agente, X_train, y_train, global_encoder)
         agentes.append(agente)
     print()
@@ -122,13 +117,6 @@ def main():
 
     interface = Interface(ambiente, agentes, abordagem_a, abordagem_b, abordagem_c)
     interface.root.mainloop()
-
-    # abordagem_a(ambiente, agentes)
-    # abordagem_b(ambiente, agentes)
-    # abordagem_c(ambiente, agentes)
-
-    # for agente in agentes:
-    #     print(f'Agente {agente.nome} accuracy: {accuracy_score(y_test, agente.testar(X_test))}')
 
 
 main()
