@@ -8,6 +8,9 @@ from Ambiente import Ambiente
 from Agente import Agente
 
 def abordagem_A(ambiente, agentes):
+    for agente in agentes:
+        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
+
     while ambiente.tesouros_achados <= ambiente.total_tesouros * 0.5 and len(agentes) > 0:
         for index, agente in enumerate(agentes[:]):
             if agente.vivo:
@@ -25,6 +28,9 @@ def abordagem_A(ambiente, agentes):
         print(f'Todos os agentes morreram antes de encontrar ao menos 50% dos tesouros.')
 
 def abordagem_B(ambiente, agentes):
+    for agente in agentes:
+        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
+
     while 'N' in [elemento for linha in ambiente.matriz_compartilhada for elemento in linha] and len(agentes) > 0:
         for index, agente in enumerate(agentes[:]):
             if agente.vivo:
@@ -39,6 +45,32 @@ def abordagem_B(ambiente, agentes):
     else:
         print('*********FALHA*********')
         print('Todos os agentes morreram antes de explorar o ambiente inteiro')
+
+def abordagem_C(ambiente, agentes):
+    ambiente.inserir_f()
+
+    for agente in agentes:
+        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
+
+    flag = False
+    while not flag and len(agentes) > 0:
+        for index, agente in enumerate(agentes[:]):
+            if agente.vivo:
+                agente.mover(ambiente)
+            else:
+                agentes.pop(index)
+            if agente.flag:
+                flag = True
+                break
+        ambiente.imprimir(agentes)
+
+    if flag:
+        print('*********SUCESSO - Abordagem C********')
+        print('A bandeira foi encontrada')
+    else:
+        print('*********FALHA*********')
+        print('Todos os agentes morreram antes de encontrar a bandeira')
+
 
 def main():
     data = pd.read_csv('./dados_treino/dataset.csv', delimiter=',')
@@ -66,15 +98,13 @@ def main():
         agentes.append(agente)
     print()
 
-    for agente in agentes:
-        ambiente.set_pos_agente_to_l(agente.posicao[0], agente.posicao[1])
-
     print('###### Matriz base ##########')
     ambiente.imprimir_matriz_base()
     print('######### Matriz explorada ############')
     ambiente.imprimir(agentes)
 
     #abordagem_A(ambiente, agentes)
-    abordagem_B(ambiente, agentes)
+    #abordagem_B(ambiente, agentes)
+    abordagem_C(ambiente, agentes)
 
 main()
